@@ -1,350 +1,163 @@
-# IP-Hunter
-IPHunter adalah defensive security assessment tool untuk membantu pemilik website dan developer mengidentifikasi potensi risiko keamanan dan kesalahan konfigurasi web tanpa menampilkan detail eksploitasi.
----
+# 🕵️ IP HUNTER
+**Professional Cybersecurity Tool for Origin IP Analysis & Network Intelligence**
 
-# IP HUNTER 
-Professional IP Discovery Tool with Premium UI & Dual Language Support
-
-![Python](https://img.shields.io/badge/Python-3.++-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
+![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-informational)
+![Interface](https://img.shields.io/badge/Interface-CLI-black)
+![Language](https://img.shields.io/badge/Language-EN%20%7C%20ID-blue)
+![Topic](https://img.shields.io/badge/Topic-Cybersecurity-blueviolet)
+![Status](https://img.shields.io/badge/Status-Active-success)
 ![Support](https://img.shields.io/badge/Support-Saweria-orange)
 ![Support](https://img.shields.io/badge/Support-Trakteer-red)
-![Cybersecurity](https://img.shields.io/badge/Topic-Cybersecurity-blueviolet)
+![Ethical](https://img.shields.io/badge/Use-Ethical%20Only-success)
+
+
 ---
 
-## 📋 Table of Contents
-● Overview
-
-● Features
-
-● Installation
-
-● Usage
-
-● Screenshots
-
-● How It Works
-
-● Language Support
-
-● Output Formats
-
-● Cloudflare Detection
-
-● Contributing
-
-● License
-
-● Contact
-
-
 ## 🎯 Overview
-IP HUNTER is a professional-grade tool designed for discovering origin IP addresses behind domains. With its premium UI, dual language support (English & Indonesian), and intelligent analysis system, it helps security researchers and network administrators identify potential origin servers.
-``⚠️ Educational Purpose Only - This tool is designed for legitimate security research and authorized testing only.
-``
+
+**IP HUNTER** adalah tools profesional berbasis **Python CLI** untuk melakukan **analisis IP domain**, mendeteksi **Cloudflare/CDN**, serta mengidentifikasi **kemungkinan Origin IP** menggunakan sistem penilaian cerdas.
+
+Tools ini dirancang untuk:
+- Security researchers  
+- Network administrators  
+- Cybersecurity learners  
+
+> ⚠️ **Educational Purpose Only**  
+> Tools ini dibuat untuk riset keamanan yang sah dan pengujian **berizin**.
+
+---
+
 ## ✨ Features
-## 🚀 Core Capabilities
 
-● DNS Resolution - Resolve domains to all associated IP addresses
+### 🚀 Core Capabilities
 
-● CDN Detection - Automatically detect Cloudflare and major cloud providers
+- **DNS Resolution**  
+  Resolve domain ke seluruh IP yang terkait
 
-● Origin IP Analysis - Score and rank potential origin IP candidates
+- **CDN Detection**  
+  Deteksi otomatis Cloudflare & provider cloud besar
 
-● Port Scanning - Quick scan of common ports on discovered IPs
+- **Origin IP Analysis**  
+  Skoring & ranking kandidat Origin IP
 
-● HTTP Analysis - Extract server information and headers
+- **Port Scanning**  
+  Quick scan port umum pada IP yang ditemukan
 
-# 🌐 Dual Language
+- **HTTP Analysis**  
+  Ekstraksi header & informasi server
+
+---
+
+## 🌐 Dual Language Support
+
+English → Full English Interface
+
+Bahasa Indonesia → Terjemahan lengkap Bahasa Indonesia
+
+```yaml
+Semua bagian mendukung dual language:
+- Menu & opsi
+- Error & notifikasi
+- Hasil scan
+- Rekomendasi
+- Dokumentasi bantuan
 ```
-English - Full English interface
+---
 
-Bahasa Indonesia - Complete Indonesian translation
+## 📊 Export Options
+
+JSON Export → Structured & machine-readable
+
+CSV Export → Spreadsheet compatible
+
+Screen Output → CLI display
+
+---
+
+## 💻 Installation
+
+### Prerequisites
+- Python **3.8+**
+- OS: Linux / macOS / Windows
+
+### Quick Install
+
+```bash
+# Clone repository
+git clone https://github.com/ruyynn/IP-Hunter.git
+
+# Masuk ke direktori
+cd IP-Hunter
 ```
-
-# 📊 Export Options
+# (Opsional) Jadikan executable - Linux / macOS
 ```
-JSON Export - Structured data format
-
-CSV Export - Spreadsheet-compatible format
-
-Screen Output - Real-time display
+chmod +x IP_HUNTER.py
 ```
-# 💻 Installation
-Prerequisites
-Python 3.++
-
-## Quick Install
-```
-# Clone the repository
-git clone https://github.com/ruyynn/iphunter.git
-
-# Navigate to directory
-cd iphunter
-
-# Make executable (Linux/Mac)
-chmod +x iphunterV2.py
-```
-# 🎮 Usage
+## 🎮 Usage
 Basic Usage
 ```bash
-# Run the tool
-python3 iphunterV2.py
+python3 IP_HUNTER.py
 ```
-
-# Menu Options
-Option	English	& Bahasa Indonesia	Description
-
-[1]	Scan Single Domain	Scan Domain Tunggal	Scan one domain
-
-[2]	Scan Multiple Domains	Scan Banyak Domain	Bulk scan (coming soon)
-
-[3]	View Scan History	Lihat Riwayat Scan	History viewer (coming soon)
-
-[4]	Settings	Pengaturan	Configuration (coming soon)
-
-[5]	Help & Tutorial	Bantuan & Tutorial	User guide
-
-[0]	Exit	Keluar	Exit program
-
 # 📸 Screenshots
 
-# 🔧 How It Works
-1. DNS Resolution
-Performs A/AAAA record lookup
+## 🛡️ Cloudflare Detection
+**Jika Cloudflare terdeteksi, IP HUNTER akan:**
 
-Collects all associated IP addresses
+● 🔴 Menampilkan peringatan jelas
 
-Filters unique addresses
+● 📘 Memberikan penjelasan teknis
 
-2. Provider Detection
-Checks against Cloudflare IP ranges
+● 🧠 Menyarankan metode investigasi alternatif
 
-Identifies major cloud providers (Google, AWS, Azure)
+● ❗ Tidak ada tools yang dapat langsung menemukan Origin IP jika Cloudflare dikonfigurasi dengan benar.
 
-Flags CDN-protected IPs
+# 🤝 Contributing
+Kontribusi sangat dipersilakan!
 
-3. HTTP Analysis
-Connects to port 80
+Fork repository
 
-Analyzes server headers
+Buat branch fitur
 
-Detects Cloudflare-specific headers (CF-Ray, CF-Cache-Status)
+Pull request dengan deskripsi jelas
 
-4. Port Scanning
-Quick scan of common ports (21,22,23,25,53,80,110,143,443,445)
+## ⭐ Support & Collaboration
 
-Identifies open services
+- ⭐ Star repository ini jika bermanfaat  
+- 🐛 **Lapor bug** bisa melalui:
+  - GitHub Issues
+  - Email developer
+- 🤝 **Kolaborasi / kerja sama**:
+  - GitHub (pull request / discussion)
+  - Email (kontak langsung)
 
-Non-intrusive, single packet per port
+---
 
-5. Origin Analysis
-Scoring System:
+## 📞 Contact
 
--40 points: Major cloud provider (not origin)
+**Developer**  
+📧 Email: ruyynn25@gmail.com  
+💻 GitHub: https://github.com/ruyynn  
+📸 Instagram: https://www.instagram.com/ellreynn  
 
-+5 points per open port
 
-+10 points for web ports (80,443)
+# ⚖️ Disclaimer
+Tools ini dibuat untuk edukasi & pengujian berizin.
 
-+5 points for non-CDN reverse DNS
+Hanya scan domain milik sendiri atau yang memiliki izin
 
-6. Confidence Levels
- 
-Score	Confidence	Color
+Hormati ToS & hukum yang berlaku
 
-60+	HIGH	🟢 Green
+Developer tidak bertanggung jawab atas penyalahgunaan
 
-30-59	MEDIUM	🟡 Yellow
+Selalu verifikasi hasil dengan tools lain
 
-0-29	LOW	⚪ White
-
-## 🌍 Language Support
-
-English Interface
-```text
-🌐 Select Language:
-  [1] English
-  [2] Bahasa Indonesia
-Indonesian Interface
-```
-```text
-🌐 Pilih Bahasa:
-  [1] English
-  [2] Bahasa Indonesia
-```
-## Both languages feature complete translations of:
-
-All menu items and options
-
-Error messages and notifications
-
-Help documentation
-
-Scan results and analysis
-
-Recommendations
-
-## 📁 Output Formats
-JSON Output
-```json
-{
-  "domain": "example.com",
-  "timestamp": "2024-01-01T12:00:00",
-  "ips": ["192.168.1.1"],
-  "cloudflare_detected": false,
-  "big_provider_detected": false,
-  "candidates": [
-    {
-      "ip": "192.168.1.1",
-      "score": 65,
-      "open_ports": [80, 443],
-      "reasons": ["2 open ports", "Standard web ports"],
-      "is_big_provider": false
-    }
-  ],
-  "confidence": "HIGH"
-}
-
-```
-
-CSV Output
-```
-Domain	     IP	       Score	Open Ports	Cloudflare
-example.com	192.168.1.1	65	80,443	        No
-🛡️ Cloudflare Detection
-When Cloudflare is detected, IP HUNTER provides:
-
-🔴 Warning Display
-Clear indication of Cloudflare protection
-```
-List of detected Cloudflare IPs
-
-Educational information about why origin IP cannot be directly found
-
-📚 Alternative Methods
-Historical DNS Records - Check before Cloudflare implementation
-
-SSL Certificate Analysis - Examine Subject Alternative Names
-
-Subdomain Enumeration - Find unprotected subdomains
-
-MX/SPF Records - Email infrastructure may reveal origin
-
-Cloudflare Leaks - Search for misconfigurations
-
-⚠️ Important Note
-No tool can directly find origin IP behind properly configured Cloudflare protection.
-IP HUNTER provides candidates and recommendations, but manual investigation is required.
-
-🗺️ Roadmap
-✅ Version 1.1 (Current)
-Dual language support (EN/ID)
-
-Premium UI with animations
-
-Origin IP scoring system
-
-Basic port scanning
-
-Cloudflare detection
-
-JSON/CSV export
-
-🚧 Version 1.2 (Planned)
-Bulk domain scanning
-
-Threading for faster scans
-
-SSL certificate analysis
-
-Reverse DNS lookup
-
-WHOIS integration
-
-🔮 Version 2.0 (Future)
-Historical DNS records
-
-Subdomain enumeration
-
-Favicon hash analysis
-
-SSL SAN extraction
-
-Autonomous System (AS) lookup
-
-Geographical IP mapping
-
-🤝 Contributing
-Contributions are welcome! Here's how you can help:
-
-Fork the repository
-
-Create a feature branch (git checkout -b feature/amazing-feature)
-
-Commit your changes (git commit -m 'Add amazing feature')
-
-Push to the branch (git push origin feature/amazing-feature)
-
-Open a Pull Request
-
-Contribution Guidelines
-Maintain PEP 8 style guide
-
-Add comments for complex logic
-
-Update documentation
-
-Test thoroughly
-
-📜 License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-text
-MIT License
-
-Copyright (c) 2024 ruyynn
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files...
-📞 Contact
-Developer
-ruyynn / ellreynn
-
-Instagram: @ellreynn
-
-GitHub: @ruyynn
-
-Support
-⭐ Star this repository if you find it useful!
-
-🐛 Report issues via GitHub Issues
-
-💬 Contact developer for questions or collaboration
-
-🙏 Acknowledgments
-Python community for excellent documentation
-
-Security researchers for sharing knowledge
-
-All users who provided feedback and suggestions
-
-⚖️ Disclaimer
-This tool is for educational and authorized testing purposes only.
-
-Only scan domains you own or have permission to test
-
-Respect websites' terms of service and robots.txt
-
-The developer is not responsible for misuse of this tool
-
-Always verify findings through multiple sources
-
-Use responsibly and ethically
+Gunakan secara etis & bertanggung jawab
 
 <div align="center">
 Made with ❤️ by ruyynn
 
 ⬆ Back to Top
 
-</div>
+</div> ```
