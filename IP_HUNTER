@@ -1,0 +1,1034 @@
+#!/usr/bin/env python3
+"""
+IP HUNTER v1.1 - Professional IP Discovery Tool
+"""
+import sys
+import socket
+import json
+import csv
+import time
+import random
+import os
+from datetime import datetime
+from ipaddress import ip_address, ip_network
+import struct
+
+# ==================== ANIMATION SYSTEM ====================
+class Animations:
+    """Animation effects for UI"""
+    
+    @staticmethod
+    def loading_bar(duration=5, text="Initializing System"):
+        """Loading bar animation with countdown"""
+        print(f"\n{Colors.CYAN}{Colors.BOLD}{text}...{Colors.END}")
+        print(f"{Colors.WHITE}{'─' * 50}{Colors.END}")
+        
+        for i in range(duration):
+            progress = (i + 1) * 10
+            bar = '█' * (progress // 2) + '░' * (50 - (progress // 2))
+            countdown = duration - i
+            sys.stdout.write(f"\r{Colors.GREEN}[{bar}]{Colors.END} {Colors.YELLOW}{countdown}s{Colors.END} ")
+            sys.stdout.flush()
+            time.sleep(1)
+        
+        print(f"\r{Colors.GREEN}[{'█' * 50}]{Colors.END} {Colors.GREEN}READY!{Colors.END}")
+        time.sleep(0.5)
+    
+    @staticmethod
+    def typewriter(text, delay=0.03):
+        """Typewriter effect for text"""
+        for char in text:
+            sys.stdout.write(char)
+            sys.stdout.flush()
+            time.sleep(delay)
+        print()
+
+# ==================== PREMIUM COLORS ====================
+class Colors:
+    """Enhanced color system for premium look"""
+    # Bright colors
+    RED = '\033[38;5;196m'
+    GREEN = '\033[38;5;46m'
+    YELLOW = '\033[38;5;226m'
+    BLUE = '\033[38;5;33m'
+    MAGENTA = '\033[38;5;201m'
+    CYAN = '\033[38;5;51m'
+    WHITE = '\033[38;5;255m'
+    ORANGE = '\033[38;5;208m'
+    PURPLE = '\033[38;5;129m'
+    
+    # Style
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    ITALIC = '\033[3m'
+    END = '\033[0m'
+    
+    @staticmethod
+    def gradient_text(text, color1, color2):
+        """Create gradient effect text"""
+        result = ""
+        steps = len(text)
+        for i, char in enumerate(text):
+            r = color1[0] + (color2[0] - color1[0]) * i // steps
+            g = color1[1] + (color2[1] - color1[1]) * i // steps
+            b = color1[2] + (color2[2] - color1[2]) * i // steps
+            result += f"\033[38;2;{r};{g};{b}m{char}"
+        return result + Colors.END
+
+# ==================== PREMIUM LOGO ====================
+class Logo:
+    """Premium ASCII logo for IP HUNTER"""
+    
+    @staticmethod
+    def display():
+        """Display premium logo"""
+        logo = f"""
+{Colors.CYAN}{Colors.BOLD}
+    ╔══════════════════════════════════════════════════════════════╗
+    ║                                                              ║
+    ║  {Colors.gradient_text(" ██╗  ██╗██╗   ██╗███╗   ██╗████████╗███████╗██████╗ ", (33, 150, 243), (156, 39, 176))}       ║
+    ║  {Colors.gradient_text(" ██║  ██║██║   ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗", (33, 150, 243), (156, 39, 176))}       ║
+    ║  {Colors.gradient_text(" ███████║██║   ██║██╔██╗ ██║   ██║   █████╗  ██████╔╝", (33, 150, 243), (156, 39, 176))}       ║
+    ║  {Colors.gradient_text(" ██╔══██║██║   ██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗", (33, 150, 243), (156, 39, 176))}       ║
+    ║  {Colors.gradient_text(" ██║  ██║╚██████╔╝██║ ╚████║   ██║   ███████╗██║  ██║", (33, 150, 243), (156, 39, 176))}       ║
+    ║  {Colors.gradient_text(" ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝", (33, 150, 243), (156, 39, 176))}       ║
+    ║                                                              ║
+    ║                  {Colors.WHITE}{Colors.BOLD}v e r s i o n   1 . 1{Colors.END}                       ║
+    ║                                                              ║
+    ╚══════════════════════════════════════════════════════════════╝
+{Colors.END}
+        """
+        print(logo)
+        
+        # Star request text
+        star_text = f"""
+    {Colors.YELLOW}{Colors.BOLD}
+    ╔══════════════════════════════════════════════════════════════╗
+    ║  ⭐  Please give a star if this tool helps you  ⭐           ║
+    ╚══════════════════════════════════════════════════════════════╝
+    {Colors.END}
+        """
+        print(star_text)
+
+# ==================== LANGUAGE SYSTEM ====================
+class Language:
+    """Dual language system for English and Indonesian"""
+    
+    # Language dictionaries
+    TEXT = {
+        'en': {
+            # UI Elements
+            'title': "IP HUNTER v1.1",
+            'subtitle': "Professional IP Discovery Tool",
+            'select_lang': "🌐 Select Language:",
+            'lang_english': "English",
+            'lang_indonesian': "Bahasa Indonesia",
+            'press_enter': "Press Enter to continue...",
+            'invalid_choice': "Invalid choice!",
+            
+            # Social Media
+            'developer': "Developer",
+            'instagram': "Instagram",
+            'github': "GitHub",
+            
+            # Main Menu
+            'main_menu': "🏆 MAIN MENU",
+            'menu_scan': "Scan Single Domain",
+            'menu_bulk': "Scan Multiple Domains",
+            'menu_history': "View Scan History",
+            'menu_settings': "Settings",
+            'menu_help': "Help & Tutorial",
+            'menu_exit': "Exit",
+            'select_option': "Select option [0-5]:",
+            
+            # Scan Interface
+            'scan_target': "Scan Target:",
+            'enter_domain': "Enter domain (e.g., example.com):",
+            'select_output': "Select output format:",
+            'output_screen': "Screen only",
+            'output_json': "Save as JSON",
+            'output_csv': "Save as CSV",
+            'scan_starting': "Starting scan...",
+            'scan_completed': "Scan completed successfully!",
+            
+            # Scan Stages
+            'stage_dns': "DNS Resolution",
+            'stage_cdn': "CDN Detection",
+            'stage_http': "HTTP Analysis",
+            'stage_ports': "Port Scanning",
+            'stage_analysis': "Origin Analysis",
+            
+            # Results
+            'ips_found': "IP addresses found:",
+            'no_ips': "Failed to resolve domain",
+            'cf_detected': "⚠️  CLOUDFLARE DETECTED",
+            'cf_warning': "Website is protected by Cloudflare.",
+            'cf_hidden': "Origin IP may be hidden behind proxy.",
+            'cf_methods': "Methods to find origin:",
+            'cf_historical': "Historical DNS records",
+            'cf_subdomain': "Subdomain enumeration",
+            'cf_ssl': "SSL certificate analysis",
+            'cf_mx': "MX/SPF records checking",
+            
+            # Analysis Terms
+            'origin_candidate': "ORIGIN IP CANDIDATE",
+            'likely_origin': "LIKELY ORIGIN (UNVERIFIED)",
+            'confidence': "Confidence:",
+            'score': "Score:",
+            'high': "HIGH",
+            'medium': "MEDIUM",
+            'low': "LOW",
+            'candidate': "Candidate",
+            'candidates': "candidate(s)",
+            
+            # Network Info
+            'open_ports': "Open ports:",
+            'reverse_dns': "Reverse DNS:",
+            'server': "Server:",
+            'asn_big': "BIG PROVIDER DETECTED",
+            'asn_warning': "IP belongs to major cloud provider",
+            'asn_note': "Likely not origin server",
+            
+            # Recommendations
+            'recommendations': "RECOMMENDATIONS",
+            'verify_needed': "Verification needed",
+            'manual_check': "Manual verification recommended",
+            'check_history': "Check historical DNS",
+            'try_subdomains': "Try subdomain scanning",
+            
+            # File Operations
+            'saved_to': "Report saved to:",
+            'export_json': "Export as JSON",
+            'export_csv': "Export as CSV",
+            
+            # Help
+            'help_title': "HELP & TUTORIAL",
+            'help_usage': "How to use:",
+            'help_step1': "1. Select option 1 for single domain scan",
+            'help_step2': "2. Enter the domain (example.com)",
+            'help_step3': "3. Choose output format if needed",
+            'help_step4': "4. Wait for scan to complete",
+            'help_terms': "Understanding Terms:",
+            'help_cf': "Cloudflare detected = Origin IP may be hidden",
+            'help_candidate': "Candidate = Possible origin, needs verification",
+            'help_confidence': "Confidence score = Likelihood of being origin",
+            'help_tips': "Tips:",
+            'help_verify': "Always verify findings manually",
+            'help_multi': "Use multiple tools for confirmation",
+            'help_legal': "Respect website terms of service",
+            
+            # Errors
+            'error_general': "Error:",
+            'error_domain': "No domain provided",
+            'error_dns': "DNS resolution failed",
+            'error_timeout': "Connection timeout",
+            'interrupted': "Scan interrupted",
+            
+            # Goodbye
+            'thank_you': "Thank you for using IP HUNTER!",
+        },
+        
+        'id': {
+            # UI Elements
+            'title': "IP HUNTER v1.1",
+            'subtitle': "Alat Penemuan IP Profesional",
+            'select_lang': "🌐 Pilih Bahasa:",
+            'lang_english': "English",
+            'lang_indonesian': "Bahasa Indonesia",
+            'press_enter': "Tekan Enter untuk melanjutkan...",
+            'invalid_choice': "Pilihan tidak valid!",
+            
+            # Social Media
+            'developer': "Pengembang",
+            'instagram': "Instagram",
+            'github': "GitHub",
+            
+            # Main Menu
+            'main_menu': "🏆 MENU UTAMA",
+            'menu_scan': "Scan Domain Tunggal",
+            'menu_bulk': "Scan Banyak Domain",
+            'menu_history': "Lihat Riwayat Scan",
+            'menu_settings': "Pengaturan",
+            'menu_help': "Bantuan & Tutorial",
+            'menu_exit': "Keluar",
+            'select_option': "Pilih opsi [0-5]:",
+            
+            # Scan Interface
+            'scan_target': "Target Scan:",
+            'enter_domain': "Masukkan domain (contoh: example.com):",
+            'select_output': "Pilih format output:",
+            'output_screen': "Hanya layar",
+            'output_json': "Simpan sebagai JSON",
+            'output_csv': "Simpan sebagai CSV",
+            'scan_starting': "Memulai scan...",
+            'scan_completed': "Scan selesai berhasil!",
+            
+            # Scan Stages
+            'stage_dns': "Resolusi DNS",
+            'stage_cdn': "Deteksi CDN",
+            'stage_http': "Analisis HTTP",
+            'stage_ports': "Pemindaian Port",
+            'stage_analysis': "Analisis Origin",
+            
+            # Results
+            'ips_found': "Alamat IP ditemukan:",
+            'no_ips': "Gagal meresolve domain",
+            'cf_detected': "⚠️  CLOUDFLARE TERDETEKSI",
+            'cf_warning': "Website dilindungi oleh Cloudflare.",
+            'cf_hidden': "IP asli mungkin tersembunyi di balik proxy.",
+            'cf_methods': "Metode untuk mencari origin:",
+            'cf_historical': "Record DNS historis",
+            'cf_subdomain': "Enumerasi subdomain",
+            'cf_ssl': "Analisis sertifikat SSL",
+            'cf_mx': "Pengecekan record MX/SPF",
+            
+            # Analysis Terms
+            'origin_candidate': "KANDIDAT IP ASLI",
+            'likely_origin': "KEMUNGKINAN ASLI (BELUM DIVERIFIKASI)",
+            'confidence': "Tingkat Kepercayaan:",
+            'score': "Skor:",
+            'high': "TINGGI",
+            'medium': "SEDANG",
+            'low': "RENDAH",
+            'candidate': "Kandidat",
+            'candidates': "kandidat",
+            
+            # Network Info
+            'open_ports': "Port terbuka:",
+            'reverse_dns': "DNS terbalik:",
+            'server': "Server:",
+            'asn_big': "PROVIDER BESAR TERDETEKSI",
+            'asn_warning': "IP milik provider cloud besar",
+            'asn_note': "Kemungkinan bukan server asli",
+            
+            # Recommendations
+            'recommendations': "REKOMENDASI",
+            'verify_needed': "Perlu verifikasi",
+            'manual_check': "Verifikasi manual disarankan",
+            'check_history': "Cek record DNS historis",
+            'try_subdomains': "Coba pemindaian subdomain",
+            
+            # File Operations
+            'saved_to': "Laporan disimpan ke:",
+            'export_json': "Ekspor sebagai JSON",
+            'export_csv': "Ekspor sebagai CSV",
+            
+            # Help
+            'help_title': "BANTUAN & TUTORIAL",
+            'help_usage': "Cara penggunaan:",
+            'help_step1': "1. Pilih opsi 1 untuk scan domain tunggal",
+            'help_step2': "2. Masukkan domain (example.com)",
+            'help_step3': "3. Pilih format output jika diperlukan",
+            'help_step4': "4. Tunggu scan selesai",
+            'help_terms': "Memahami Istilah:",
+            'help_cf': "Cloudflare terdeteksi = IP asli mungkin tersembunyi",
+            'help_candidate': "Kandidat = Kemungkinan origin, perlu verifikasi",
+            'help_confidence': "Skor kepercayaan = Kemungkinan sebagai origin",
+            'help_tips': "Tips:",
+            'help_verify': "Selalu verifikasi temuan secara manual",
+            'help_multi': "Gunakan beberapa alat untuk konfirmasi",
+            'help_legal': "Hormati syarat layanan website",
+            
+            # Errors
+            'error_general': "Error:",
+            'error_domain': "Domain tidak diberikan",
+            'error_dns': "Resolusi DNS gagal",
+            'error_timeout': "Koneksi timeout",
+            'interrupted': "Scan diinterupsi",
+            
+            # Goodbye
+            'thank_you': "Terima kasih telah menggunakan IP HUNTER!",
+        }
+    }
+    
+    # Current language (default: English)
+    current = 'en'
+    
+    @classmethod
+    def set_language(cls, lang_code):
+        """Set current language"""
+        if lang_code in cls.TEXT:
+            cls.current = lang_code
+    
+    @classmethod
+    def get(cls, key):
+        """Get text in current language"""
+        return cls.TEXT[cls.current].get(key, key)
+    
+    @classmethod
+    def print(cls, key, end='\n'):
+        """Print text in current language"""
+        print(cls.get(key), end=end)
+    
+    @classmethod
+    def input(cls, key):
+        """Get input with text in current language"""
+        return input(cls.get(key))
+
+# ==================== NETWORK DATABASE ====================
+class NetworkDB:
+    """Database untuk CDN dan provider besar"""
+    
+    CLOUDFLARE_RANGES = [
+        '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22',
+        '104.16.0.0/12', '108.162.192.0/18', '131.0.72.0/22',
+        '141.101.64.0/18', '162.158.0.0/15', '172.64.0.0/13',
+        '173.245.48.0/20', '188.114.96.0/20', '190.93.240.0/20',
+        '197.234.240.0/22', '198.41.128.0/17'
+    ]
+    
+    BIG_PROVIDERS = {
+        'GOOGLE': [
+            '8.8.8.0/24', '8.8.4.0/24', '8.34.208.0/20',
+            '34.0.0.0/15', '35.184.0.0/13', '130.211.0.0/16'
+        ],
+        'AWS': [
+            '13.0.0.0/15', '18.0.0.0/15', '52.0.0.0/10',
+            '34.192.0.0/12', '35.160.0.0/13'
+        ],
+        'AZURE': [
+            '13.64.0.0/11', '13.104.0.0/14', '20.0.0.0/10',
+            '40.0.0.0/10', '51.0.0.0/10'
+        ]
+    }
+    
+    @staticmethod
+    def check_provider(ip):
+        """Cek apakah IP milik provider besar"""
+        try:
+            ip_obj = ip_address(ip)
+            
+            # Cek Cloudflare
+            for cidr in NetworkDB.CLOUDFLARE_RANGES:
+                if ip_obj in ip_network(cidr):
+                    return 'CLOUDFLARE'
+            
+            # Cek provider besar lainnya
+            for provider, ranges in NetworkDB.BIG_PROVIDERS.items():
+                for cidr in ranges:
+                    if ip_obj in ip_network(cidr):
+                        return provider
+            
+            return None
+        except:
+            return None
+
+# ==================== SCANNER MODULES ====================
+class Scanner:
+    """Main scanner class"""
+    
+    @staticmethod
+    def resolve_dns(domain):
+        """Resolve domain ke IP"""
+        ips = []
+        try:
+            addrinfo = socket.getaddrinfo(domain, None)
+            for result in addrinfo:
+                ip = result[4][0]
+                if ip not in ips:
+                    ips.append(ip)
+        except:
+            pass
+        return ips
+    
+    @staticmethod
+    def scan_ports(ip):
+        """Quick port scan"""
+        ports = [21, 22, 23, 25, 53, 80, 110, 143, 443, 445, 
+                 993, 995, 1723, 3306, 3389, 5900, 8080, 8443]
+        open_ports = []
+        
+        for port in ports[:10]:  # Scan 10 port pertama
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(1)
+                result = sock.connect_ex((ip, port))
+                if result == 0:
+                    open_ports.append(port)
+                sock.close()
+            except:
+                pass
+        
+        return open_ports
+    
+    @staticmethod
+    def get_http_info(domain):
+        """Get HTTP server info"""
+        info = {'server': 'Unknown', 'status': 0, 'cloudflare': False}
+        
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(3)
+            sock.connect((domain, 80))
+            
+            request = f"HEAD / HTTP/1.0\r\nHost: {domain}\r\n\r\n"
+            sock.send(request.encode())
+            
+            response = sock.recv(2048).decode('latin-1', errors='ignore')
+            sock.close()
+            
+            # Parse response
+            lines = response.split('\r\n')
+            if lines and 'HTTP/' in lines[0]:
+                parts = lines[0].split(' ')
+                if len(parts) > 1:
+                    info['status'] = int(parts[1])
+            
+            # Check headers
+            for line in lines:
+                if ': ' in line:
+                    key, value = line.split(': ', 1)
+                    if key.lower() == 'server':
+                        info['server'] = value
+                    # Check Cloudflare headers
+                    if key.lower() in ['cf-ray', 'cf-cache-status']:
+                        info['cloudflare'] = True
+        except:
+            pass
+        
+        return info
+
+# ==================== IP HUNTER CORE ====================
+class IPHunter:
+    def __init__(self, domain):
+        self.domain = domain
+        self.results = {
+            'domain': domain,
+            'timestamp': datetime.now().isoformat(),
+            'ips': [],
+            'cloudflare_detected': False,
+            'big_provider_detected': False,
+            'candidates': [],
+            'confidence': 'LOW'
+        }
+    
+    def scan(self):
+        """Run complete scan"""
+        Language.print('stage_dns')
+        ips = Scanner.resolve_dns(self.domain)
+        
+        if not ips:
+            Language.print('no_ips')
+            return False
+        
+        self.results['ips'] = ips
+        
+        # Check for Cloudflare and big providers
+        cloudflare_ips = []
+        big_provider_ips = []
+        
+        for ip in ips:
+            provider = NetworkDB.check_provider(ip)
+            if provider == 'CLOUDFLARE':
+                cloudflare_ips.append(ip)
+                self.results['cloudflare_detected'] = True
+            elif provider:
+                big_provider_ips.append((ip, provider))
+                self.results['big_provider_detected'] = True
+        
+        # If Cloudflare detected, show warning and stop
+        if cloudflare_ips:
+            self._show_cloudflare_warning(cloudflare_ips)
+            return True
+        
+        # Get HTTP info
+        Language.print('stage_http')
+        http_info = Scanner.get_http_info(self.domain)
+        
+        # Port scan first 2 IPs
+        Language.print('stage_ports')
+        port_results = {}
+        for ip in ips[:2]:
+            open_ports = Scanner.scan_ports(ip)
+            if open_ports:
+                port_results[ip] = open_ports
+        
+        # Analyze candidates
+        Language.print('stage_analysis')
+        candidates = self._analyze_candidates(ips, port_results, big_provider_ips)
+        self.results['candidates'] = candidates
+        
+        # Display results
+        self._display_results(candidates, http_info)
+        
+        Language.print('scan_completed')
+        return True
+    
+    def _show_cloudflare_warning(self, cf_ips):
+        """Show Cloudflare detection warning - Simple bilingual version"""
+        print(f"\n{Colors.RED}{'═' * 70}{Colors.END}")
+        print(f"{Colors.RED}{Colors.BOLD}⚠️  {Language.get('cf_detected')} ⚠️{Colors.END}")
+        print(f"{Colors.RED}{'═' * 70}{Colors.END}")
+        
+        # Main warning message
+        print(f"\n{Colors.YELLOW}{Colors.BOLD}{Language.get('cf_warning')}{Colors.END}")
+        print(f"{Colors.WHITE}{Language.get('cf_hidden')}{Colors.END}")
+        
+        # Why IP Hunter cannot find origin
+        print(f"\n{Colors.CYAN}{'─' * 70}{Colors.END}")
+        if Language.current == 'en':
+            print(f"{Colors.BOLD}{Colors.WHITE}WHY IP HUNTER CANNOT FIND ORIGIN IP:{Colors.END}")
+        else:
+            print(f"{Colors.BOLD}{Colors.WHITE}KENAPA IP HUNTER TIDAK BISA TEMUKAN IP ASLI:{Colors.END}")
+        print(f"{Colors.CYAN}{'─' * 70}{Colors.END}")
+        
+        # Simple list instead of table
+        if Language.current == 'en':
+            reasons = [
+                "1. PROXY LAYER - Cloudflare acts as reverse proxy",
+                "2. IP MASKING - Real server IP never exposed",
+                "3. ANYCAST NETWORK - Same domain has multiple exit IPs",
+                "4. DYNAMIC ROUTING - IP changes based on location",
+                "5. DNS OBSCURITY - DNS records point to Cloudflare"
+            ]
+        else:
+            reasons = [
+                "1. LAYER PROXY - Cloudflare sebagai reverse proxy",
+                "2. PENYAMARAN IP - IP server asli tidak pernah terbuka",
+                "3. JARINGAN ANYCAST - Domain sama punya banyak exit IP",
+                "4. ROUTING DINAMIS - IP berubah berdasarkan lokasi",
+                "5. PENYAMARAN DNS - Record DNS mengarah ke Cloudflare"
+            ]
+        
+        for reason in reasons:
+            print(f"  {Colors.YELLOW}{reason}{Colors.END}")
+        
+        # Show detected Cloudflare IPs
+        print(f"\n{Colors.YELLOW}{Colors.BOLD}CLOUDFLARE IPs DETECTED:{Colors.END}")
+        for ip in cf_ips:
+            print(f"  {Colors.RED}• {ip}{Colors.END}")
+        
+        # Alternative methods
+        print(f"\n{Colors.GREEN}{Colors.BOLD}{Language.get('cf_methods')}{Colors.END}")
+        print(f"{Colors.GREEN}{'─' * 70}{Colors.END}")
+        
+        if Language.current == 'en':
+            alt_methods = [
+                "1. HISTORICAL DNS - Check DNS records before Cloudflare",
+                "2. SSL CERTIFICATE - Look for IP in certificate SANs",
+                "3. SUBDOMAIN ENUM - Find subdomains not protected",
+                "4. MX/SPF RECORDS - Email records may reveal origin",
+                "5. CLOUDFLARE LEAKS - Search for misconfigurations"
+            ]
+        else:
+            alt_methods = [
+                "1. DNS HISTORIS - Cek record DNS sebelum Cloudflare",
+                "2. SERTIFIKAT SSL - Cari IP di Subject Alternative Names",
+                "3. ENUMERASI SUBDOMAIN - Cari subdomain tidak dilindungi",
+                "4. RECORD MX/SPF - Record email mungkin ungkap server",
+                "5. KEBOCORAN CLOUDFLARE - Cari miskonfigurasi"
+            ]
+        
+        for method in alt_methods:
+            print(f"  {Colors.CYAN}{method}{Colors.END}")
+        
+        # Technical note
+        print(f"\n{Colors.MAGENTA}{Colors.BOLD}TECHNICAL NOTE:{Colors.END}")
+        if Language.current == 'en':
+            print(f"{Colors.MAGENTA}• Cloudflare = Reverse proxy at Layer 7{Colors.END}")
+            print(f"{Colors.MAGENTA}• Origin only accepts connections from Cloudflare IPs{Colors.END}")
+            print(f"{Colors.MAGENTA}• No direct public access to origin server{Colors.END}")
+        else:
+            print(f"{Colors.MAGENTA}• Cloudflare = Reverse proxy di Layer 7{Colors.END}")
+            print(f"{Colors.MAGENTA}• Server asli hanya terima koneksi dari IP Cloudflare{Colors.END}")
+            print(f"{Colors.MAGENTA}• Tidak ada akses publik langsung ke server asli{Colors.END}")
+        
+        # Final message
+        print(f"\n{Colors.RED}{Colors.BOLD}⚠️  IMPORTANT:{Colors.END}")
+        if Language.current == 'en':
+            print(f"{Colors.RED}No tool can directly find origin IP behind properly")
+            print(f"configured Cloudflare protection. Manual investigation required.{Colors.END}")
+        else:
+            print(f"{Colors.RED}Tidak ada tools yang bisa langsung temukan IP asli")
+            print(f"di balik Cloudflare yang dikonfigurasi benar. Perlu investigasi manual.{Colors.END}")
+        
+        # Final message
+        print(f"\n{Colors.RED}{Colors.BOLD}⚠️  IMPORTANT:{Colors.END}")
+        print(f"{Colors.RED}No tool (including IP Hunter) can directly find origin IP behind properly")
+        print(f"configured Cloudflare protection. The methods above require additional")
+        print(f"research and may not always yield results.{Colors.END}")
+        
+        # Technical note
+        print(f"\n{Colors.MAGENTA}{Colors.BOLD}TECHNICAL NOTE:{Colors.END}")
+        print(f"{Colors.MAGENTA}• Cloudflare operates as a reverse proxy at Layer 7 (Application){Colors.END}")
+        print(f"{Colors.MAGENTA}• Origin server only accepts connections from Cloudflare IPs{Colors.END}")
+        print(f"{Colors.MAGENTA}• No direct public access to origin server possible{Colors.END}")
+        print(f"{Colors.MAGENTA}• Even port scanning will only show Cloudflare infrastructure{Colors.END}")
+        
+        # Final message
+        print(f"\n{Colors.RED}{Colors.BOLD}⚠️  IMPORTANT:{Colors.END}")
+        print(f"{Colors.RED}No tool (including IP Hunter) can directly find origin IP behind properly")
+        print(f"configured Cloudflare protection. The methods above require additional")
+        print(f"research and may not always yield results.{Colors.END}")
+    
+    def _analyze_candidates(self, ips, port_results, big_provider_ips):
+        """Analyze and score IP candidates"""
+        candidates = []
+        big_provider_dict = dict(big_provider_ips)
+        
+        for ip in ips:
+            score = 0
+            reasons = []
+            
+            # Penalty for big providers (-40 points)
+            if ip in big_provider_dict:
+                score -= 40
+                reasons.append(f"{Language.get('asn_big')}: {big_provider_dict[ip]}")
+            
+            # Bonus for open ports (+5 per port)
+            open_ports = port_results.get(ip, [])
+            if open_ports:
+                score += len(open_ports) * 5
+                reasons.append(f"{len(open_ports)} {Language.get('open_ports')}")
+            
+            # Bonus for web ports (+10)
+            if 80 in open_ports or 443 in open_ports:
+                score += 10
+                reasons.append("Standard web ports")
+            
+            # Try reverse DNS
+            try:
+                hostname = socket.gethostbyaddr(ip)[0]
+                reasons.append(f"{Language.get('reverse_dns')}: {hostname[:30]}...")
+                
+                # Bonus if doesn't look like CDN/provider
+                if 'cdn' not in hostname.lower() and 'cloud' not in hostname.lower():
+                    score += 5
+            except:
+                pass
+            
+            # Only add if score > 0 or specific conditions
+            if score > -20:  # Don't add if heavily penalized
+                candidates.append({
+                    'ip': ip,
+                    'score': max(0, score),  # Minimum 0
+                    'open_ports': open_ports,
+                    'reasons': reasons,
+                    'is_big_provider': ip in big_provider_dict
+                })
+        
+        # Sort by score
+        candidates.sort(key=lambda x: x['score'], reverse=True)
+        return candidates
+    
+    def _display_results(self, candidates, http_info):
+        """Display analysis results"""
+        print(f"\n{Colors.CYAN}{'═' * 60}{Colors.END}")
+        print(f"{Colors.BOLD}{Colors.BLUE}{Language.get('origin_candidate')}{Colors.END}")
+        print(f"{Colors.CYAN}{'═' * 60}{Colors.END}")
+        
+        if not candidates:
+            print(f"{Colors.YELLOW}No suitable candidates found{Colors.END}")
+            return
+        
+        # Show top 3 candidates
+        for idx, cand in enumerate(candidates[:3], 1):
+            print(f"\n{Colors.BOLD}{Colors.WHITE}{Language.get('candidate')} #{idx}{Colors.END}")
+            print(f"  IP: {Colors.BOLD}{cand['ip']}{Colors.END}")
+            
+            # Score and confidence
+            score = cand['score']
+            if score >= 60:
+                confidence = f"{Colors.GREEN}{Language.get('high')}{Colors.END}"
+            elif score >= 30:
+                confidence = f"{Colors.YELLOW}{Language.get('medium')}{Colors.END}"
+            else:
+                confidence = f"{Colors.WHITE}{Language.get('low')}{Colors.END}"
+            
+            print(f"  {Language.get('confidence')} {confidence} ({Language.get('score')}: {score}/100)")
+            
+            # Show warning if big provider
+            if cand['is_big_provider']:
+                print(f"  {Colors.RED}⚠ {Language.get('asn_warning')}{Colors.END}")
+            
+            # Open ports
+            if cand['open_ports']:
+                print(f"  {Language.get('open_ports')} {', '.join(map(str, cand['open_ports']))}")
+        
+        # Show HTTP info
+        if http_info['server'] != 'Unknown':
+            print(f"\n{Colors.CYAN}{Language.get('server')} {http_info['server']}{Colors.END}")
+        
+        # Recommendations
+        print(f"\n{Colors.YELLOW}{'─' * 60}{Colors.END}")
+        print(f"{Colors.BOLD}{Colors.YELLOW}{Language.get('recommendations')}{Colors.END}")
+        
+        best_candidate = candidates[0]
+        if best_candidate['score'] >= 60:
+            print(f"  ✅ {Language.get('likely_origin')}: {best_candidate['ip']}")
+        elif best_candidate['score'] >= 30:
+            print(f"  ⚠  {Language.get('verify_needed')}")
+            print(f"  • {Language.get('manual_check')}")
+        else:
+            print(f"  ⚠  {Language.get('low')} {Language.get('confidence')}")
+            print(f"  • {Language.get('check_history')}")
+            print(f"  • {Language.get('try_subdomains')}")
+
+# ==================== LANGUAGE SELECTION MENU ====================
+def show_language_menu():
+    """Show language selection menu with social media"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    # Show logo first
+    Logo.display()
+    
+    # Social Media Information
+    social_media = f"""
+    {Colors.CYAN}{Colors.BOLD}
+    ╔══════════════════════════════════════════════════════════════╗
+    ║                     {Colors.WHITE}DEVELOPER INFORMATION{Colors.CYAN}                    ║
+    ╠══════════════════════════════════════════════════════════════╣
+    ║                                                              ║
+    ║  {Colors.WHITE}{Colors.BOLD}Instagram:{Colors.END} {Colors.CYAN}@ellreynn{Colors.END}                                        ║
+    ║  {Colors.WHITE}  {Colors.BOLD}URL:{Colors.END} {Colors.BLUE}https://www.instagram.com/ellreynn{Colors.END}                   ║
+    ║                                                              ║
+    ║  {Colors.WHITE}{Colors.BOLD}GitHub:{Colors.END} {Colors.CYAN}@ruyynn{Colors.END}                                             ║
+    ║  {Colors.WHITE}  {Colors.BOLD}URL:{Colors.END} {Colors.BLUE}https://github.com/ruyynn{Colors.END}                            ║
+    ║                                                              ║
+    ╚══════════════════════════════════════════════════════════════╝
+    {Colors.END}
+    """
+    print(social_media)
+    
+    # Language Selection
+    print(f"\n{Colors.CYAN}{'═' * 60}{Colors.END}")
+    print(f"{Colors.BOLD}{Colors.WHITE}{' ' * 20}{Language.get('select_lang')}{Colors.END}")
+    print(f"{Colors.CYAN}{'═' * 60}{Colors.END}")
+    
+    print(f"\n  {Colors.GREEN}[1]{Colors.END} {Language.get('lang_english')}")
+    print(f"  {Colors.GREEN}[2]{Colors.END} {Language.get('lang_indonesian')}")
+    print(f"\n{Colors.CYAN}{'─' * 60}{Colors.END}")
+    
+    while True:
+        try:
+            choice = input(f"{Colors.YELLOW}➤ Select [1-2]: {Colors.END}").strip()
+            
+            if choice == '1':
+                Language.set_language('en')
+                return 'en'
+            elif choice == '2':
+                Language.set_language('id')
+                return 'id'
+            else:
+                Language.print('invalid_choice')
+        except KeyboardInterrupt:
+            return None
+
+# ==================== MAIN MENU ====================
+def show_main_menu():
+    """Show main menu in selected language"""
+    while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        
+        # Show small version of logo
+        mini_logo = f"""
+{Colors.CYAN}{Colors.BOLD}
+    ╔══════════════════════════════════════════════════════════════╗
+    ║                    {Colors.WHITE}IP HUNTER v1.1{Colors.CYAN}                            ║
+    ║               {Colors.YELLOW}Origin IP Discovery Tool{Colors.CYAN}                       ║
+    ╚══════════════════════════════════════════════════════════════╝
+{Colors.END}
+        """
+        print(mini_logo)
+        
+        print(f"{Colors.CYAN}{'═' * 60}{Colors.END}")
+        print(f"{Colors.BOLD}{Colors.WHITE}{' ' * 20}{Language.get('main_menu')}{Colors.END}")
+        print(f"{Colors.CYAN}{'═' * 60}{Colors.END}")
+        
+        print(f"\n  {Colors.GREEN}[1]{Colors.END} {Language.get('menu_scan')}")
+        print(f"  {Colors.GREEN}[2]{Colors.END} {Language.get('menu_bulk')}")
+        print(f"  {Colors.BLUE}[3]{Colors.END} {Language.get('menu_history')}")
+        print(f"  {Colors.BLUE}[4]{Colors.END} {Language.get('menu_settings')}")
+        print(f"  {Colors.YELLOW}[5]{Colors.END} {Language.get('menu_help')}")
+        print(f"  {Colors.RED}[0]{Colors.END} {Language.get('menu_exit')}")
+        print(f"\n{Colors.CYAN}{'─' * 60}{Colors.END}")
+        
+        try:
+            choice = input(f"{Colors.YELLOW}➤ {Language.get('select_option')} {Colors.END}").strip()
+            
+            if choice == '0':
+                return 'exit'
+            elif choice == '1':
+                scan_single_domain()
+            elif choice == '2':
+                scan_multiple_domains()
+            elif choice == '3':
+                show_scan_history()
+            elif choice == '4':
+                show_settings()
+            elif choice == '5':
+                show_help()
+            else:
+                Language.print('invalid_choice')
+                time.sleep(1)
+                
+        except KeyboardInterrupt:
+            return 'exit'
+        except Exception as e:
+            print(f"{Colors.RED}{Language.get('error_general')} {e}{Colors.END}")
+            time.sleep(2)
+
+# ==================== SCAN FUNCTIONS ====================
+def scan_single_domain():
+    """Scan single domain"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    print(f"\n{Colors.CYAN}{'═' * 60}{Colors.END}")
+    print(f"{Colors.BOLD}{Colors.WHITE}{' ' * 15}{Language.get('menu_scan')}{Colors.END}")
+    print(f"{Colors.CYAN}{'═' * 60}{Colors.END}")
+    
+    domain = input(f"\n{Colors.YELLOW}➤ {Language.get('enter_domain')} {Colors.END}").strip()
+    
+    if not domain:
+        Language.print('error_domain')
+        input(f"\n{Colors.CYAN}{Language.get('press_enter')}{Colors.END}")
+        return
+    
+    # Clean domain
+    domain = domain.replace('http://', '').replace('https://', '').replace('www.', '').split('/')[0]
+    
+    # Ask for output format
+    print(f"\n{Colors.WHITE}{Language.get('select_output')}{Colors.END}")
+    print(f"  {Colors.CYAN}[1]{Colors.END} {Language.get('output_screen')}")
+    print(f"  {Colors.CYAN}[2]{Colors.END} {Language.get('output_json')}")
+    print(f"  {Colors.CYAN}[3]{Colors.END} {Language.get('output_csv')}")
+    
+    format_choice = input(f"{Colors.YELLOW}➤ Select [1-3]: {Colors.END}").strip()
+    
+    # Run scan
+    print(f"\n{Colors.CYAN}{'─' * 60}{Colors.END}")
+    Language.print('scan_starting')
+    
+    hunter = IPHunter(domain)
+    
+    try:
+        success = hunter.scan()
+        
+        if success:
+            # Save report if requested
+            if format_choice in ['2', '3']:
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                filename = f"iphunter_{domain}_{timestamp}"
+                
+                if format_choice == '2':  # JSON
+                    filename += ".json"
+                    with open(filename, 'w') as f:
+                        json.dump(hunter.results, f, indent=2)
+                else:  # CSV
+                    filename += ".csv"
+                    with open(filename, 'w', newline='') as f:
+                        writer = csv.writer(f)
+                        writer.writerow(['Domain', 'IP', 'Score', 'Open Ports', 'Cloudflare'])
+                        for cand in hunter.results['candidates']:
+                            writer.writerow([
+                                domain,
+                                cand['ip'],
+                                cand['score'],
+                                ','.join(map(str, cand['open_ports'])),
+                                'Yes' if hunter.results['cloudflare_detected'] else 'No'
+                            ])
+                
+                print(f"\n{Colors.GREEN}✓ {Language.get('saved_to')} {filename}{Colors.END}")
+        
+    except KeyboardInterrupt:
+        Language.print('interrupted')
+    except Exception as e:
+        print(f"{Colors.RED}{Language.get('error_general')} {e}{Colors.END}")
+    
+    input(f"\n{Colors.CYAN}{Language.get('press_enter')}{Colors.END}")
+
+def scan_multiple_domains():
+    """Scan multiple domains"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    print(f"\n{Colors.CYAN}{'═' * 60}{Colors.END}")
+    print(f"{Colors.BOLD}{Colors.WHITE}{' ' * 15}{Language.get('menu_bulk')}{Colors.END}")
+    print(f"{Colors.CYAN}{'═' * 60}{Colors.END}")
+    
+    print(f"\n{Colors.YELLOW}Feature coming soon...{Colors.END}")
+    input(f"\n{Colors.CYAN}{Language.get('press_enter')}{Colors.END}")
+
+# ==================== OTHER MENU FUNCTIONS ====================
+def show_scan_history():
+    """Show scan history"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    print(f"\n{Colors.CYAN}{'═' * 60}{Colors.END}")
+    print(f"{Colors.BOLD}{Colors.WHITE}{' ' * 15}{Language.get('menu_history')}{Colors.END}")
+    print(f"{Colors.CYAN}{'═' * 60}{Colors.END}")
+    
+    print(f"\n{Colors.YELLOW}Feature coming soon...{Colors.END}")
+    input(f"\n{Colors.CYAN}{Language.get('press_enter')}{Colors.END}")
+
+def show_settings():
+    """Show settings"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    print(f"\n{Colors.CYAN}{'═' * 60}{Colors.END}")
+    print(f"{Colors.BOLD}{Colors.WHITE}{' ' * 20}{Language.get('menu_settings')}{Colors.END}")
+    print(f"{Colors.CYAN}{'═' * 60}{Colors.END}")
+    
+    print(f"\n{Colors.YELLOW}Feature coming soon...{Colors.END}")
+    input(f"\n{Colors.CYAN}{Language.get('press_enter')}{Colors.END}")
+
+def show_help():
+    """Show help and tutorial"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    print(f"\n{Colors.CYAN}{'═' * 60}{Colors.END}")
+    print(f"{Colors.BOLD}{Colors.WHITE}{' ' * 15}{Language.get('help_title')}{Colors.END}")
+    print(f"{Colors.CYAN}{'═' * 60}{Colors.END}")
+    
+    print(f"\n{Colors.BOLD}{Language.get('help_usage')}{Colors.END}")
+    print(f"  {Language.get('help_step1')}")
+    print(f"  {Language.get('help_step2')}")
+    print(f"  {Language.get('help_step3')}")
+    print(f"  {Language.get('help_step4')}")
+    
+    print(f"\n{Colors.BOLD}{Language.get('help_terms')}{Colors.END}")
+    print(f"  • {Language.get('help_cf')}")
+    print(f"  • {Language.get('help_candidate')}")
+    print(f"  • {Language.get('help_confidence')}")
+    
+    print(f"\n{Colors.BOLD}{Language.get('help_tips')}{Colors.END}")
+    print(f"  • {Language.get('help_verify')}")
+    print(f"  • {Language.get('help_multi')}")
+    print(f"  • {Language.get('help_legal')}")
+    
+    input(f"\n{Colors.CYAN}{Language.get('press_enter')}{Colors.END}")
+
+# ==================== MAIN FUNCTION ====================
+def main():
+    """Main function"""
+    try:
+        # Clear screen first
+        os.system('cls' if os.name == 'nt' else 'clear')
+        
+        # Show loading animation (5 seconds)
+        Animations.loading_bar(5, "Loading IP Hunter v1.0")
+        
+        # Clear screen after loading
+        os.system('cls' if os.name == 'nt' else 'clear')
+        
+        # Show language selection with social media
+        lang = show_language_menu()
+        if not lang:
+            return
+        
+        # Show main menu
+        while True:
+            result = show_main_menu()
+            if result == 'exit':
+                break
+        
+        # Goodbye message
+        print(f"\n{Colors.GREEN}{Language.get('thank_you')}{Colors.END}")
+        
+    except KeyboardInterrupt:
+        print(f"\n{Colors.YELLOW}{Language.get('interrupted')}{Colors.END}")
+    except Exception as e:
+        print(f"\n{Colors.RED}{Language.get('error_general')} {e}{Colors.END}")
+
+# ==================== ENTRY POINT ====================
+if __name__ == "__main__":
+    main()
