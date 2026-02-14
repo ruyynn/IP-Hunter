@@ -102,6 +102,14 @@ python3 IP_HUNTER.py
 ```
 # 📸 Screenshots
 
+## 🖼️ Gallery
+Berikut beberapa tampilan IP HUNTER saat dijalankan:
+<p float="left">
+  <img src="https://raw.githubusercontent.com/ruyynn/IP-Hunter/main/screenshot/Screenshot%202026-02-13%20080424.png" width="300" />
+  <img src="https://raw.githubusercontent.com/ruyynn/IP-Hunter/main/screenshot/Screenshot%202026-02-13%20080736.png" width="300" />
+  <img src="https://raw.githubusercontent.com/ruyynn/IP-Hunter/main/screenshot/Screenshot%202026-02-14%20192411.png" width="300" />
+</p>
+
 ## 🛡️ Cloudflare Detection
 **Jika Cloudflare terdeteksi, IP HUNTER akan:**
 
