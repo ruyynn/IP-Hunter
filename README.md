@@ -171,11 +171,23 @@ Developer tidak bertanggung jawab atas penyalahgunaan
 
 Selalu verifikasi hasil dengan tools lain
 
-Gunakan secara etis & bertanggung jawab
+Gunakan secara etis & bertanggung jawab  
+  
+<div align="center">
+  
+#  **Mau support developer?**  
+
+## [🌟 Saweria](https://saweria.co/ruyynn) 
+
+## [🎁 Trakteer](https://trakteer.id/ruyynn)
+
+
+</div>
+
 
 <div align="center">
-Made with ❤️ by ruyynn
+<a href="#top" style="text-decoration:none">
+  <img src="https://img.shields.io/badge/⬆%20Back%20to%20Top-Click%20Here-22D3EE?style=for-the-badge&logo=arrow-up" alt="Back to Top">
+</a>
+</div>
 
-⬆ Back to Top
-
-</div> ```
