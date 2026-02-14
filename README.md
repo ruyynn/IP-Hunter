@@ -143,11 +143,11 @@ Pull request dengan deskripsi jelas
 ## ⭐ Support & Collaboration
 
 - ⭐ Star repository ini jika bermanfaat  
-- 🐛 **Lapor bug** bisa melalui:
-  - GitHub Issues
-  - Email developer
+- 🐛 **Lapor bug / ingin bertanya** bisa melalui:
+  - [Buka GitHub Issues](https://github.com/ruyynn/IP-Hunter/issues/new/choose)  
+  - [Kirim Email ke Developer via Gmail](https://mail.google.com/mail/?view=cm&fs=1&to=ruyynn25@gmail.com&su=IP%20HUNTER%20Bug%20or%20Question)
+    
 - 🤝 **Kolaborasi / kerja sama**:
-  - GitHub (pull request / discussion)
   - Email (kontak langsung)
 
 ---
