@@ -102,12 +102,12 @@ cd IP-Hunter
 ```
 # (Opsional) Jadikan executable - Linux / macOS
 ```
-chmod +x IP_HUNTER.py
+chmod +x IP-Hunter.py
 ```
 ## 🎮 Usage
 Basic Usage
 ```bash
-python3 IP_HUNTER.py
+python IP-Hunter.py
 ```
 # 📸 Screenshots
 
