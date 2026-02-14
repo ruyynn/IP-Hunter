@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 """
-IP HUNTER v1.1 - Professional IP Discovery Tool
+╔════════════════════════════════════════════════════════╗
+║   Jangan lupa kasih bintang kalau tools ini bantu!     ║
+║   Mau ubah code? Boleh, tapi Tetap cantumin credit     ║
+║               Hargai author  — Ruyynn                  ║
+╠════════════════════════════════════════════════════════╣
+║  © 2026 Ruyynn. All rights reserved.                   ║
+║  IP HUNTER v1.1                                        ║
+╚════════════════════════════════════════════════════════╝
+
 """
 import sys
 import socket
