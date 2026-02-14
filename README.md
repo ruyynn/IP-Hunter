@@ -1,4 +1,13 @@
-# 🕵️ IP HUNTER
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=22&pause=1000&color=22D3EE&center=true&vCenter=true&width=720&lines=KASIH+STAR+BRO+%3Av;JANGAN+LUPA+FOLLOW+GITHUB+RUYYNN+%3A+)" alt="Typing SVG" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/Ruyynn">
+    <img src="https://komarev.com/ghpvc/?username=Ruyynn&label=Profile+Views&color=22d3ee&style=plastic" />
+  </a>
+  
+  # 🕵️ IP HUNTER
 **Professional Cybersecurity Tool for Origin IP Analysis & Network Intelligence**
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
@@ -102,13 +111,14 @@ python3 IP_HUNTER.py
 ```
 # 📸 Screenshots
 
-## 🖼️ Gallery
-Berikut beberapa tampilan IP HUNTER saat dijalankan:
-<p float="left">
-  <img src="https://raw.githubusercontent.com/ruyynn/IP-Hunter/main/screenshot/Screenshot%202026-02-13%20080424.png" width="300" />
-  <img src="https://raw.githubusercontent.com/ruyynn/IP-Hunter/main/screenshot/Screenshot%202026-02-13%20080736.png" width="300" />
-  <img src="https://raw.githubusercontent.com/ruyynn/IP-Hunter/main/screenshot/Screenshot%202026-02-14%20192411.png" width="300" />
-</p>
+## **language page**
+![Screenshot 1](https://github.com/ruyynn/IP-Hunter/blob/main/screenshot/Screenshot%202026-02-13%20080424.png?raw=true)
+
+## cloudflare detector
+![Screenshot 2](https://github.com/ruyynn/IP-Hunter/blob/main/screenshot/Screenshot%202026-02-13%20080736.png?raw=true)
+
+## menu page
+![Screenshot 3](https://github.com/ruyynn/IP-Hunter/blob/main/screenshot/Screenshot%202026-02-14%20192411.png?raw=true)
 
 ## 🛡️ Cloudflare Detection
 **Jika Cloudflare terdeteksi, IP HUNTER akan:**
