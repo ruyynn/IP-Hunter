@@ -7,6 +7,7 @@
     <img src="https://komarev.com/ghpvc/?username=Ruyynn&label=Profile+Views&color=22d3ee&style=plastic" />
   </a>
   
+  
   # 🕵️ IP HUNTER
 **Professional Cybersecurity Tool for Origin IP Analysis & Network Intelligence**
 
@@ -20,6 +21,9 @@
 ![Support](https://img.shields.io/badge/Support-Saweria-orange)
 ![Support](https://img.shields.io/badge/Support-Trakteer-red)
 ![Ethical](https://img.shields.io/badge/Use-Ethical%20Only-success)
+
+
+  <p align="center"> <img src="https://readme-typing-svg.demolab.com?font=Press+Start+2P&size=18&duration=2000&pause=1000&color=F73D3D&center=true&vCenter=true&width=500&lines=IP-Hunter+v2.1;VERSI+TERBARU!;SEGERA+BERALIH!" /> </p><p align="center"> <img src="https://raw.githubusercontent.com/ruyynn/IP-Hunter2/main/assets/divider.gif" width="600" /> </p><!-- BADGE VERSI LAMA VS BARU --><p align="center"> <img src="https://img.shields.io/badge/VERSI%20LAMA-IP--Hunter%20v1.0-grey?style=for-the-badge&logo=python&logoColor=white" /> <img src="https://img.shields.io/badge/%E2%86%92-ORANGE?style=for-the-badge" /> <img src="https://img.shields.io/badge/VERSI%20BARU-IP--Hunter2%20v2.1-blue?style=for-the-badge&logo=python&logoColor=yellow" /> </p><<p align="center"> <a href="https://github.com/ruyynn/IP-Hunter2"> <img src="https://img.shields.io/badge/🚀%20LANGSUNG%20KE%20IP--HUNTER2%20🚀-blue?style=for-the-badge&logo=github&logoColor=white&labelColor=black&color=22D3EE" width="400"/> </a> </p>
 
 
 ---
